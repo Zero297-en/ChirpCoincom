@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chirp Coin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .coin-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: gold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .coin-container img {
+            width: 100px;
+            height: 100px;
+        }
+        .balance {
+            font-size: 24px;
+            margin: 10px 0;
+        }
+        .ranking {
+            margin-top: 20px;
+            width: 80%;
+            max-width: 400px;
+            text-align: left;
+        }
+        .ranking h2 {
+            text-align: center;
+        }
+        .button {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Chirp Coin</h1>
+    
+    <!-- Tanga (Qush rasmi) -->
+    <div class="coin-container" id="coin">
+        <img src="bird_icon.png" alt="Bird Icon">
+    </div>
+
+    <!-- Balans ko'rsatkich -->
+    <div class="balance">
+        Balans: <span id="balance">0</span> Coin
+    </div>
+
+    <!-- Referal qo'shish tugmasi -->
+    <button class="button" onclick="sendReferral()">Referal orqali coin olish</button>
+
+    <!-- Reyting bo'limi -->
+    <div class="ranking">
+        <h2>Reyting (Top Foydalanuvchilar)</h2>
+        <ul id="leaderboard">
+            <li>1. User1 - 10000 Coin</li>
+            <li>2. User2 - 9000 Coin</li>
+            <li>3. User3 - 8000 Coin</li>
+        </ul>
+    </div>
+
+    <script>
+        let userId = new URLSearchParams(window.location.search).get('user_id');
+
+        // Coin qo'shish funksiyasi
+        document.getElementById('coin').addEventListener('click', function() {
+            fetch('/click', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({user_id: userId})
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('balance').textContent = data.balance;
+            });
+        });
+
+        // Referal coin qo'shish funksiyasi
+        function sendReferral() {
+            fetch('/referral', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({referrer_id: userId})
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('balance').textContent = data.balance;
+            });
+        }
+    </script>
+
+</body>
+</html>
